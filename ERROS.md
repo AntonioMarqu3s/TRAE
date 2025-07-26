@@ -3,10 +3,10 @@
 ## 📊 Resumo Geral
 
 - 🔴 **Erros:** 0
-- ⚠️ **Avisos:** 10
+- ⚠️ **Avisos:** 11
 - ℹ️ **Informações:** 0
 - 💡 **Dicas:** 0
-- 📁 **Arquivos com problemas:** 1
+- 📁 **Arquivos com problemas:** 2
 
 ## 📁 index.css
 
@@ -20,14 +20,22 @@
 - [ ] ⚠️ Unknown at rule @apply - **Linha 12, Coluna 5** [css] (unknownAtRules)
 - [ ] ⚠️ Unknown at rule @apply - **Linha 16, Coluna 5** [css] (unknownAtRules)
 - [ ] ⚠️ Unknown at rule @apply - **Linha 20, Coluna 5** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @apply - **Linha 31, Coluna 5** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @apply - **Linha 36, Coluna 5** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @apply - **Linha 41, Coluna 5** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @apply - **Linha 46, Coluna 5** [css] (unknownAtRules)
+- [ ] ⚠️ Unknown at rule @apply - **Linha 72, Coluna 5** [css] (unknownAtRules)
+- [ ] ⚠️ Unknown at rule @apply - **Linha 77, Coluna 5** [css] (unknownAtRules)
+- [ ] ⚠️ Unknown at rule @apply - **Linha 82, Coluna 5** [css] (unknownAtRules)
+- [ ] ⚠️ Unknown at rule @apply - **Linha 87, Coluna 5** [css] (unknownAtRules)
+
+## 📁 supabaseKanbanStore.ts
+
+**Caminho:** `c:\Users\Anton\Desktop\TRAE\kanban-app\src\store\supabaseKanbanStore.ts`
+
+**Estatísticas:** 🔴 0 | ⚠️ 1 | ℹ️ 0 | 💡 0
+
+- [ ] ⚠️ Expected an error object to be thrown. - **Linha 151, Coluna 3** [eslint] ([object Object])
 
 ---
 
-**📅 Gerado em:** 26/07/2025, 18:47:41
+**📅 Gerado em:** 26/07/2025, 20:04:14
 
 **🔧 Extensão:** Trae Problems Viewer
 
