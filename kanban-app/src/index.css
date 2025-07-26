@@ -1,0 +1,157 @@
+/* Importações do Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fonte SF Pro Display */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Configurações globais */
+@layer base {
+  * {
+    @apply box-border;
+  }
+  
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply m-0 font-sf-pro antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    /* Bloquear seleção de texto globalmente */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Permitir seleção de texto apenas em inputs e áreas de texto */
+  input, textarea, [contenteditable="true"] {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+}
+
+/* Garantir que botões sejam sempre clicáveis */
+button {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+button:disabled {
+  pointer-events: none;
+}
+
+/* Garantir que botões dentro de contextos de drag sejam clicáveis */
+[data-dnd-context] button,
+.dnd-context button {
+  pointer-events: auto !important;
+  z-index: 100 !important;
+}
+
+/* Garantir que elementos interativos tenham z-index adequado */
+.interactive-element {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Debug overlay para verificar elementos invisíveis */
+.debug-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 0, 0, 0.1);
+  pointer-events: none;
+  z-index: 9999;
+  display: none;
+}
+
+/* Ativar debug overlay quando necessário */
+body.debug .debug-overlay {
+  display: block;
+}
+
+/* CSS para drag and drop */
+.dragging {
+  cursor: grabbing !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Melhorar cursor durante drag */
+.draggable {
+  cursor: grab;
+}
+
+.draggable:active {
+  cursor: grabbing;
+}
+
+/* Bloquear seleção de texto durante drag */
+.dnd-context * {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Permitir seleção apenas em inputs dentro do contexto DnD */
+.dnd-context input,
+.dnd-context textarea,
+.dnd-context [contenteditable="true"] {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+@layer components {
+  /* Efeito Liquid Glass */
+  .glass-effect {
+    @apply backdrop-blur-glass bg-glass-white border border-white/20 shadow-glass;
+  }
+  
+  /* Botão primário com gradiente */
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary-start to-primary-end text-white font-medium px-4 py-2 rounded-ios shadow-card hover:shadow-card-hover transition-all duration-200 hover:scale-105;
+  }
+  
+  /* Card de tarefa */
+  .task-card {
+    @apply glass-effect rounded-ios p-4 cursor-pointer transition-all duration-200 hover:shadow-card-hover hover:scale-105;
+  }
+  
+  /* Coluna do Kanban */
+  .kanban-column {
+    @apply glass-effect rounded-ios-lg p-4 min-h-96 w-72 flex-shrink-0;
+  }
+}
+
+/* Animações customizadas */
+@layer utilities {
+  .animate-bounce-soft {
+    animation: bounce-soft 2s infinite;
+  }
+  
+  @keyframes bounce-soft {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(-5px);
+    }
+  }
+}
