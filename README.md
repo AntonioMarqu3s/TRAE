@@ -1,46 +1,172 @@
-# Getting Started with Create React App
+# 📋 Kanban App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Uma aplicação moderna de gerenciamento de tarefas estilo Kanban, desenvolvida com React, TypeScript e Supabase.
 
-## Available Scripts
+## ✨ Características
 
-In the project directory, you can run:
+- 🎨 **Interface Moderna**: Design com efeito liquid glass e animações suaves
+- 🔐 **Autenticação Segura**: Sistema completo de login/cadastro com Supabase Auth
+- 📱 **Responsivo**: Funciona perfeitamente em desktop e mobile
+- 🎯 **Drag & Drop**: Arraste e solte tarefas entre colunas
+- 🔄 **Tempo Real**: Sincronização automática entre dispositivos
+- 🌙 **Acessibilidade**: Suporte completo a leitores de tela
+- 🚀 **Performance**: Otimizado para carregamento rápido
+
+## 🛠️ Tecnologias Utilizadas
+
+### Frontend
+- **React 18** - Biblioteca para interfaces de usuário
+- **TypeScript** - Tipagem estática para JavaScript
+- **Tailwind CSS** - Framework CSS utilitário
+- **Framer Motion** - Animações e transições
+- **Lucide React** - Ícones modernos
+
+### Backend & Database
+- **Supabase** - Backend as a Service
+- **PostgreSQL** - Banco de dados relacional
+- **Row Level Security (RLS)** - Segurança a nível de linha
+
+### Ferramentas de Desenvolvimento
+- **Create React App** - Configuração inicial do projeto
+- **ESLint** - Linting de código
+- **Prettier** - Formatação de código
+
+## 🚀 Como Executar o Projeto
+
+### Pré-requisitos
+- Node.js (versão 16 ou superior)
+- npm ou yarn
+- Conta no Supabase
+
+### 1. Clone o repositório
+```bash
+git clone <url-do-repositorio>
+cd kanban-app
+```
+
+### 2. Instale as dependências
+```bash
+npm install
+```
+
+### 3. Configure as variáveis de ambiente
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+
+```env
+# Configurações do Supabase
+REACT_APP_SUPABASE_URL=sua_url_do_supabase
+REACT_APP_SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase
+
+# Configurações da aplicação
+REACT_APP_NAME=Kanban App
+REACT_APP_VERSION=1.0.0
+
+# Configurações de desenvolvimento
+NODE_ENV=development
+```
+
+### 4. Execute o projeto
+```bash
+npm start
+```
+
+A aplicação estará disponível em [http://localhost:3000](http://localhost:3000)
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── components/          # Componentes React
+│   ├── auth/           # Componentes de autenticação
+│   ├── kanban/         # Componentes do Kanban
+│   ├── modals/         # Componentes de modal
+│   └── ui/             # Componentes de interface
+├── contexts/           # Contextos React
+├── lib/               # Configurações e utilitários
+├── store/             # Gerenciamento de estado
+├── types/             # Definições de tipos TypeScript
+└── styles/            # Arquivos de estilo
+```
+
+## 🎯 Funcionalidades
+
+### Autenticação
+- ✅ Login com email e senha
+- ✅ Cadastro de novos usuários
+- ✅ Confirmação por email
+- ✅ Logout seguro
+- ✅ Modal de confirmação personalizado
+
+### Gerenciamento de Tarefas
+- ✅ Criar, editar e excluir tarefas
+- ✅ Organizar tarefas em colunas
+- ✅ Arrastar e soltar tarefas
+- ✅ Definir prioridades
+- ✅ Adicionar datas de vencimento
+- ✅ Descrições detalhadas
+
+### Interface
+- ✅ Design responsivo
+- ✅ Animações suaves
+- ✅ Feedback visual
+- ✅ Ícones intuitivos
+- ✅ Campo de senha com toggle de visibilidade
+
+## 🔧 Scripts Disponíveis
 
 ### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Executa a aplicação em modo de desenvolvimento.\
+Abra [http://localhost:3000](http://localhost:3000) para visualizar no navegador.
 
 ### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Executa os testes em modo interativo.\
+Veja mais sobre [execução de testes](https://facebook.github.io/create-react-app/docs/running-tests).
 
 ### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Compila a aplicação para produção na pasta `build`.\
+Otimiza o build para melhor performance.
 
 ### `npm run eject`
+**Nota: esta é uma operação irreversível!**
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Remove a dependência de build única do projeto, copiando todas as configurações.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🔒 Segurança
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- **Variáveis de Ambiente**: Credenciais sensíveis armazenadas em `.env`
+- **Row Level Security**: Políticas de segurança no Supabase
+- **Validação de Dados**: Validação tanto no frontend quanto no backend
+- **Autenticação JWT**: Tokens seguros para autenticação
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## 🤝 Contribuindo
 
-## Learn More
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📝 Licença
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
+## 🆘 Suporte
+
+Se você encontrar algum problema ou tiver dúvidas:
+
+1. Verifique se todas as variáveis de ambiente estão configuradas
+2. Confirme se o Supabase está configurado corretamente
+3. Consulte a documentação do [Supabase](https://supabase.com/docs)
+4. Abra uma issue no repositório
+
+## 🎨 Design
+
+O design da aplicação utiliza:
+- **Liquid Glass Effect**: Efeito de vidro líquido com transparência
+- **Micro-interações**: Animações sutis para melhor UX
+- **Tipografia Moderna**: Fontes legíveis e hierarquia clara
+- **Cores Harmoniosas**: Paleta de cores suave e profissional
+
+---
+
+Desenvolvido com ❤️ por Antonio

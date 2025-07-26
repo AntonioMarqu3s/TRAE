@@ -1,15 +1,24 @@
 /**
  * Configuração do cliente Supabase
  * Este arquivo configura a conexão com o banco de dados Supabase
+ * As credenciais são carregadas das variáveis de ambiente para maior segurança
  */
 
 import { createClient } from '@supabase/supabase-js';
 
-// URL do projeto Supabase
-const supabaseUrl = 'https://pneceuljvsgduyowhlse.supabase.co';
+// URL do projeto Supabase (carregada do arquivo .env)
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 
-// Chave pública (anon key) do Supabase
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBuZWNldWxqdnNnZHV5b3dobHNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM1NTIzODUsImV4cCI6MjA2OTEyODM4NX0.gWQGBDZWGxiKu1iF1kn_2RnpXDvhQV4XSVfwWUmhQcA';
+// Chave pública (anon key) do Supabase (carregada do arquivo .env)
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+
+// Verificação de segurança para garantir que as variáveis de ambiente estão definidas
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    'Variáveis de ambiente do Supabase não encontradas. ' +
+    'Verifique se REACT_APP_SUPABASE_URL e REACT_APP_SUPABASE_ANON_KEY estão definidas no arquivo .env'
+  );
+}
 
 // Criar e exportar o cliente Supabase com configurações otimizadas
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {

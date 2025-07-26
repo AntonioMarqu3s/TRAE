@@ -26,10 +26,15 @@ import { LocalTask, LocalColumn } from '../../store/supabaseKanbanStore';
 import { Button } from '../ui';
 import { KanbanColumn } from './KanbanColumn';
 import { TaskCard } from './TaskCard';
+import { ConfirmModal } from '../modals';
 
 export const KanbanBoard: React.FC = () => {
   // Estado para controlar o item ativo durante o drag
   const [activeTask, setActiveTask] = useState<LocalTask | null>(null);
+  
+  // Estado para controlar o modal de confirmação de saída
+  const [showSignOutModal, setShowSignOutModal] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   
   // Contexto de autenticação
   const { signOut } = useAuth();
@@ -208,17 +213,27 @@ export const KanbanBoard: React.FC = () => {
   };
 
   // Handler para logout
-  const handleSignOut = async () => {
+  const handleSignOut = () => {
+    setShowSignOutModal(true);
+  };
+
+  // Confirmar logout
+  const confirmSignOut = async () => {
     try {
-      const confirmed = window.confirm('Tem certeza que deseja sair?');
-      
-      if (confirmed) {
-        await signOut();
-      }
+      setIsSigningOut(true);
+      await signOut();
+      setShowSignOutModal(false);
     } catch (error) {
-      console.error('❌ Erro no handleSignOut:', error);
+      console.error('❌ Erro no logout:', error);
       alert('Erro ao fazer logout. Tente novamente.');
+    } finally {
+      setIsSigningOut(false);
     }
+  };
+
+  // Cancelar logout
+  const cancelSignOut = () => {
+    setShowSignOutModal(false);
   };
 
   // IDs das colunas para o SortableContext
@@ -371,6 +386,19 @@ export const KanbanBoard: React.FC = () => {
           </DragOverlay>
         </DndContext>
       </main>
+
+      {/* Modal de confirmação de saída */}
+      <ConfirmModal
+        isOpen={showSignOutModal}
+        onClose={cancelSignOut}
+        onConfirm={confirmSignOut}
+        title="Confirmar Saída"
+        message="Tem certeza que deseja sair da aplicação? Você precisará fazer login novamente."
+        confirmText="Sair"
+        cancelText="Cancelar"
+        variant="warning"
+        loading={isSigningOut}
+      />
     </div>
   );
 };
