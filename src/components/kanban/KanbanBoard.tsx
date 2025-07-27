@@ -323,12 +323,12 @@ export const KanbanBoard: React.FC = () => {
             {/* Logo e título */}
             <div className="flex items-center gap-4 flex-1 min-w-0">
               <img 
-                src="/kanban-logo.png" 
+                src="/kanban.svg" 
                 alt="Kanban Logo" 
                 className="w-14 h-14 hidden md:block object-contain" 
               />
               <img 
-                src="/kanban-logo.png" 
+                src="/kanban.svg" 
                 alt="Kanban Logo" 
                 className="w-12 h-12 block md:hidden object-contain" 
               />
