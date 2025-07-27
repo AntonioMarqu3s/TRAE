@@ -107,11 +107,11 @@ export const SettingsModal: React.FC = () => {
       title="Configurações"
       size="md"
     >
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6">
         {/* Título do Board */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-            <Settings size={20} />
+          <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4 flex items-center gap-2">
+            <Settings size={18} className="md:w-5 md:h-5" />
             Configurações Gerais
           </h3>
           
@@ -136,9 +136,9 @@ export const SettingsModal: React.FC = () => {
         </div>
 
         {/* Estatísticas */}
-        <div className="glass-effect rounded-ios p-4">
-          <h4 className="font-medium text-gray-800 mb-3">Estatísticas do Board</h4>
-          <div className="grid grid-cols-2 gap-4 text-sm">
+        <div className="glass-effect rounded-ios p-3 md:p-4">
+          <h4 className="font-medium text-gray-800 mb-2 md:mb-3 text-sm md:text-base">Estatísticas do Board</h4>
+          <div className="grid grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm">
             <div>
               <span className="text-gray-600">Total de colunas:</span>
               <span className="font-semibold ml-2">{board?.columns.length || 0}</span>
@@ -162,17 +162,17 @@ export const SettingsModal: React.FC = () => {
 
         {/* Backup e Restauração */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-            <Download size={20} />
+          <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4 flex items-center gap-2">
+            <Download size={18} className="md:w-5 md:h-5" />
             Backup e Restauração
           </h3>
           
-          <div className="space-y-3">
+          <div className="space-y-2 md:space-y-3">
             <Button
               variant="secondary"
               icon={Download}
               onClick={handleExportBoard}
-              className="w-full"
+              className="w-full text-xs md:text-sm"
             >
               Exportar Board
             </Button>
@@ -181,7 +181,7 @@ export const SettingsModal: React.FC = () => {
               variant="secondary"
               icon={Upload}
               onClick={handleImportBoard}
-              className="w-full"
+              className="w-full text-xs md:text-sm"
             >
               Importar Board
             </Button>
@@ -189,9 +189,9 @@ export const SettingsModal: React.FC = () => {
         </div>
 
         {/* Zona de Perigo */}
-        <div className="border-t border-gray-200 pt-6">
-          <h3 className="text-lg font-semibold text-red-600 mb-4 flex items-center gap-2">
-            <Trash2 size={20} />
+        <div className="border-t border-gray-200 pt-4 md:pt-6">
+          <h3 className="text-base md:text-lg font-semibold text-red-600 mb-3 md:mb-4 flex items-center gap-2">
+            <Trash2 size={18} className="md:w-5 md:h-5" />
             Zona de Perigo
           </h3>
           
@@ -201,7 +201,7 @@ export const SettingsModal: React.FC = () => {
                 variant="ghost"
                 icon={RotateCcw}
                 onClick={handleResetBoard}
-                className="w-full text-red-600 hover:bg-red-50 border border-red-200"
+                className="w-full text-red-600 hover:bg-red-50 border border-red-200 text-xs md:text-sm"
               >
                 Resetar Board
               </Button>

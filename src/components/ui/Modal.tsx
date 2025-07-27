@@ -20,9 +20,9 @@ interface ModalProps {
 
 // Tamanhos do modal
 const sizeStyles = {
-  sm: 'max-w-md',
-  md: 'max-w-lg',
-  lg: 'max-w-2xl',
+  sm: 'max-w-xs md:max-w-md',
+  md: 'max-w-sm md:max-w-lg',
+  lg: 'max-w-md md:max-w-2xl',
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -107,7 +107,7 @@ export const Modal: React.FC<ModalProps> = ({
           
           {/* Container do modal */}
           <motion.div
-            className={`relative w-full ${sizeStyles[size]} glass-effect rounded-ios-lg p-6 shadow-glass animate-scale-in`}
+            className={`relative w-full ${sizeStyles[size]} glass-effect rounded-ios-lg p-4 md:p-6 shadow-glass animate-scale-in`}
             variants={modalVariants}
             initial="hidden"
             animate="visible"
@@ -120,9 +120,9 @@ export const Modal: React.FC<ModalProps> = ({
           >
             {/* Header do modal */}
             {(title || showCloseButton) && (
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-4 md:mb-6">
                 {title && (
-                  <h2 className="text-xl font-semibold text-gray-800">
+                  <h2 className="text-lg md:text-xl font-semibold text-gray-800">
                     {title}
                   </h2>
                 )}

@@ -24,8 +24,8 @@ interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>
 // Estilos base para cada variante
 const variantStyles: Record<ButtonVariant, string> = {
   primary: 'btn-primary',
-  secondary: 'glass-effect text-gray-700 hover:bg-white/30',
-  ghost: 'text-gray-600 hover:bg-white/20 hover:text-gray-800',
+  secondary: 'glass-effect text-gray-700 hover:bg-white/30 rounded-ios',
+  ghost: 'text-gray-600 hover:bg-white/20 hover:text-gray-800 rounded-ios',
   icon: 'glass-effect p-2 rounded-full hover:bg-white/30 text-gray-600 hover:text-gray-800',
 };
 

@@ -1,6 +1,6 @@
 {
-  "short_name": "Kanban App",
-  "name": "Kanban Board - Gerenciador de Tarefas",
+  "short_name": "Tarefas Kanban",
+  "name": "Tarefas Kanban - Gerenciador de Tarefas",
   "description": "Aplicativo Kanban para gerenciamento de tarefas e projetos",
   "icons": [
     {
@@ -9,12 +9,12 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "kanban-logo.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "kanban-logo.png",
       "type": "image/png",
       "sizes": "512x512"
     }
@@ -35,7 +35,7 @@
       "url": "/?action=new-task",
       "icons": [
         {
-          "src": "logo192.png",
+          "src": "kanban-logo.png",
           "sizes": "192x192"
         }
       ]

@@ -81,26 +81,29 @@ export const KanbanBoard: React.FC = () => {
   }, [isSupported, permission, requestPermission]);
 
   // Sensores para drag & drop otimizados para mobile
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 8,
+      tolerance: 5,
+      delay: 100,
+    },
+  });
+
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: isMobile ? 500 : 250, // Pressão longa obrigatória no mobile (500ms)
+      tolerance: isMobile ? 15 : 5, // Maior tolerância no mobile para evitar ativação acidental
+    },
+  });
+
+  const keyboardSensor = useSensor(KeyboardSensor, {
+    coordinateGetter: sortableKeyboardCoordinates,
+  });
+
+  // Configurar sensores baseado no dispositivo
   const sensors = useSensors(
-    // Sensor de ponteiro para desktop
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: isMobile ? 5 : 8, // Menor distância no mobile
-        tolerance: isMobile ? 8 : 5, // Maior tolerância no mobile
-        delay: isMobile ? 0 : 100, // Sem delay no mobile
-      },
-    }),
-    // Sensor de toque otimizado para mobile
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: isMobile ? 150 : 250, // Delay menor no mobile
-        tolerance: isMobile ? 10 : 5, // Maior tolerância no mobile
-      },
-    }),
-    // Sensor de teclado para acessibilidade
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
+    // No mobile, apenas touch e keyboard. No desktop, todos os sensores
+    ...(isMobile ? [touchSensor, keyboardSensor] : [pointerSensor, touchSensor, keyboardSensor])
   );
 
   // Handler para início do drag
@@ -309,136 +312,159 @@ export const KanbanBoard: React.FC = () => {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-primary-start to-primary-end overflow-hidden dnd-context">
-      {/* Header */}
-      <header className="glass-effect border-b border-white/20 p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-800 truncate">
-              {board?.title || 'Kanban Board'}
-            </h1>
-            <p className="text-gray-600 text-xs md:text-sm">
-              {board?.columns.length || 0} colunas • {board ? Object.keys(board.tasks).length : 0} tarefas
-            </p>
-          </div>
-
-          {/* Desktop buttons */}
-          <div className="hidden md:flex items-center gap-2">
-            {/* Botão de notificações */}
-            {isSupported && permission !== 'granted' && (
-              <Button
-                variant="ghost"
-                icon={Bell}
-                onClick={requestPermission}
-                aria-label="Ativar notificações"
-                className="text-orange-600 hover:text-orange-700"
-              >
-                Notificações
-              </Button>
-            )}
-            
-            {/* Botão de teste das notificações diárias */}
-            {isSupported && permission === 'granted' && (
-              <Button
-                variant="ghost"
-                icon={Calendar}
-                onClick={forceCheckDailyTasks}
-                aria-label="Verificar tarefas do dia"
-                className="text-blue-600 hover:text-blue-700"
-              >
-                Verificar Tarefas
-              </Button>
-            )}
-            
-            <Button
-              variant="ghost"
-              icon={Download}
-              onClick={handleExportBoard}
-              aria-label="Exportar board"
-            >
-              Exportar
-            </Button>
-            
-            <Button
-              variant="ghost"
-              icon={Settings}
-              onClick={() => openModal('settings', 'edit')}
-              aria-label="Configurações"
-            >
-              Configurações
-            </Button>
-            
-            <Button
-              variant="ghost"
-              icon={LogOut}
-              onClick={handleSignOut}
-              aria-label="Sair"
-            >
-              Sair
-            </Button>
-            
-            <Button
-              variant="primary"
-              icon={Plus}
-              onClick={handleAddColumn}
-            >
-              Nova Coluna
-            </Button>
-          </div>
-
-          {/* Mobile buttons - apenas ícones */}
-          <div className="flex md:hidden items-center gap-1">
-            {/* Botão de notificações mobile */}
-            {isSupported && permission !== 'granted' && (
-              <Button
-                variant="ghost"
-                icon={Bell}
-                onClick={requestPermission}
-                aria-label="Ativar notificações"
-                className="p-2 text-orange-600 hover:text-orange-700"
+    <div className="h-screen bg-gradient-to-br from-primary-start to-primary-end overflow-hidden dnd-context flex flex-col">
+      {/* Header fixo com efeito liquid glass */}
+      <header className="relative backdrop-blur-xl bg-white/10 border-b border-white/20 rounded-b-3xl shadow-lg shadow-black/10 flex-shrink-0">
+        {/* Efeito liquid glass adicional */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent rounded-b-3xl"></div>
+        
+        <div className="relative px-6 md:px-8 py-4 md:py-5">
+          <div className="flex items-center justify-between">
+            {/* Logo e título */}
+            <div className="flex items-center gap-4 flex-1 min-w-0">
+              <img 
+                src="/kanban-logo.png" 
+                alt="Kanban Logo" 
+                className="w-14 h-14 hidden md:block object-contain" 
               />
-            )}
-            
-            {/* Botão de teste das notificações diárias mobile */}
-            {isSupported && permission === 'granted' && (
+              <img 
+                src="/kanban-logo.png" 
+                alt="Kanban Logo" 
+                className="w-12 h-12 block md:hidden object-contain" 
+              />
+              
+              <div className="min-w-0 flex-1 hidden md:block">
+                <h1 className="text-lg md:text-2xl font-bold text-white truncate drop-shadow-sm">
+                  {board?.title || 'Kanban Board'}
+                </h1>
+                <p className="text-white/80 text-xs md:text-sm drop-shadow-sm">
+                  {board?.columns.length || 0} colunas • {board ? Object.keys(board.tasks).length : 0} tarefas
+                </p>
+              </div>
+            </div>
+
+            {/* Desktop buttons */}
+            <div className="hidden md:flex items-center gap-3">
+              {/* Botão de notificações */}
+              {isSupported && permission !== 'granted' && (
+                <Button
+                  variant="ghost"
+                  icon={Bell}
+                  onClick={requestPermission}
+                  aria-label="Ativar notificações"
+                  className="text-orange-300 hover:text-orange-200 bg-black/20 hover:bg-black/30 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10"
+                >
+                  Notificações
+                </Button>
+              )}
+              
+              {/* Botão de teste das notificações diárias */}
+              {isSupported && permission === 'granted' && (
+                <Button
+                  variant="ghost"
+                  icon={Calendar}
+                  onClick={forceCheckDailyTasks}
+                  aria-label="Verificar tarefas do dia"
+                  className="text-blue-300 hover:text-blue-200 bg-black/20 hover:bg-black/30 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10"
+                >
+                  Verificar Tarefas
+                </Button>
+              )}
+              
               <Button
                 variant="ghost"
-                icon={Calendar}
-                onClick={forceCheckDailyTasks}
-                aria-label="Verificar tarefas do dia"
-                className="p-2 text-blue-600 hover:text-blue-700"
+                icon={Download}
+                onClick={handleExportBoard}
+                aria-label="Exportar board"
+                className="text-white/90 hover:text-white bg-black/20 hover:bg-black/30 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10"
+              >
+                Exportar
+              </Button>
+              
+              <Button
+                variant="ghost"
+                icon={Settings}
+                onClick={() => openModal('settings', 'edit')}
+                aria-label="Configurações"
+                className="text-white/90 hover:text-white bg-black/20 hover:bg-black/30 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10"
+              >
+                Configurações
+              </Button>
+              
+              <Button
+                variant="ghost"
+                icon={LogOut}
+                onClick={handleSignOut}
+                aria-label="Sair"
+                className="text-white/90 hover:text-white bg-black/20 hover:bg-black/30 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10"
+              >
+                Sair
+              </Button>
+              
+              <Button
+                variant="primary"
+                icon={Plus}
+                onClick={handleAddColumn}
+                className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm rounded-full px-4 py-2"
+              >
+                Nova Coluna
+              </Button>
+            </div>
+
+            {/* Mobile buttons - apenas ícones */}
+            <div className="flex md:hidden items-center gap-2">
+              {/* Botão de notificações mobile */}
+              {isSupported && permission !== 'granted' && (
+                <Button
+                  variant="ghost"
+                  icon={Bell}
+                  onClick={requestPermission}
+                  aria-label="Ativar notificações"
+                  className="p-3 text-orange-300 hover:text-orange-200 bg-black/20 hover:bg-black/30 backdrop-blur-sm rounded-full border border-white/10"
+                />
+              )}
+              
+              {/* Botão de teste das notificações diárias mobile */}
+              {isSupported && permission === 'granted' && (
+                <Button
+                  variant="ghost"
+                  icon={Calendar}
+                  onClick={forceCheckDailyTasks}
+                  aria-label="Verificar tarefas do dia"
+                  className="p-3 text-blue-300 hover:text-blue-200 bg-black/20 hover:bg-black/30 backdrop-blur-sm rounded-full border border-white/10"
+                />
+              )}
+              
+              <Button
+                variant="ghost"
+                icon={Plus}
+                onClick={handleAddColumn}
+                aria-label="Nova Coluna"
+                className="p-3 text-white/90 hover:text-white bg-black/20 hover:bg-black/30 backdrop-blur-sm rounded-full border border-white/10"
               />
-            )}
-            
-            <Button
-              variant="ghost"
-              icon={Plus}
-              onClick={handleAddColumn}
-              aria-label="Nova Coluna"
-              className="p-2"
-            />
-            
-            <Button
-              variant="ghost"
-              icon={Settings}
-              onClick={() => openModal('settings', 'edit')}
-              aria-label="Configurações"
-              className="p-2"
-            />
-            
-            <Button
-              variant="ghost"
-              icon={LogOut}
-              onClick={handleSignOut}
-              aria-label="Sair"
-              className="p-2"
-            />
+              
+              <Button
+                variant="ghost"
+                icon={Settings}
+                onClick={() => openModal('settings', 'edit')}
+                aria-label="Configurações"
+                className="p-3 text-white/90 hover:text-white bg-black/20 hover:bg-black/30 backdrop-blur-sm rounded-full border border-white/10"
+              />
+              
+              <Button
+                variant="ghost"
+                icon={LogOut}
+                onClick={handleSignOut}
+                aria-label="Sair"
+                className="p-3 text-white/90 hover:text-white bg-black/20 hover:bg-black/30 backdrop-blur-sm rounded-full border border-white/10"
+              />
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Board */}
-      <main className="flex-1 p-2 md:p-6 overflow-hidden">
+      {/* Board - área principal com scroll horizontal */}
+      <main className="flex-1 overflow-hidden">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
@@ -446,9 +472,9 @@ export const KanbanBoard: React.FC = () => {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          <div className="h-full overflow-x-auto overflow-y-hidden kanban-board">
+          <div className="h-full overflow-x-auto overflow-y-hidden kanban-board scrollable-content">
             {/* Container com padding otimizado para mobile */}
-            <div className="flex gap-3 md:gap-6 h-full min-w-max pb-4 md:pb-6 px-1 md:px-0">
+            <div className="flex gap-3 md:gap-6 h-full min-w-max p-3 md:p-6">
               <SortableContext items={columnIds} strategy={horizontalListSortingStrategy}>
                 {board?.columns.map((column) => (
                   <KanbanColumn

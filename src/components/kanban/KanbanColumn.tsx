@@ -54,30 +54,34 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         variant="column"
         className={`h-full flex flex-col transition-all duration-200 ${
           isOver ? 'ring-2 ring-primary-start/50 bg-primary-start/5' : ''
-        }`}
+        } ${isMobile ? 'max-h-[calc(100vh-120px)]' : ''}`}
       >
         {/* Header da coluna */}
-        <div className="flex items-center justify-between p-3 md:p-4 border-b border-white/20">
-          <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
+        <div className="p-3 md:p-4 border-b border-white/20 flex-shrink-0">
+          {/* Título perfeitamente centralizado */}
+          <div className="flex items-center justify-center gap-2 md:gap-3 mb-3">
             {/* Indicador de cor da coluna */}
             <div
               className="w-2.5 md:w-3 h-2.5 md:h-3 rounded-full flex-shrink-0"
               style={{ backgroundColor: column.color }}
             />
             
-            {/* Título e contador */}
-            <div className="min-w-0 flex-1">
-              <h2 className="font-semibold text-gray-800 text-base md:text-lg truncate">
+            {/* Título e contador centralizados */}
+            <div className="text-center flex-1">
+              <h2 className="font-semibold text-gray-800 text-base md:text-lg">
                 {column.title}
               </h2>
               <span className="text-xs md:text-sm text-gray-500">
                 {tasks.length} {tasks.length === 1 ? 'tarefa' : 'tarefas'}
               </span>
             </div>
+
+            {/* Espaçador invisível para balancear o indicador de cor */}
+            <div className="w-2.5 md:w-3 h-2.5 md:h-3 flex-shrink-0 opacity-0"></div>
           </div>
 
-          {/* Botões de ação */}
-          <div className="flex items-center gap-0.5 md:gap-1 flex-shrink-0">
+          {/* Botões de ação centralizados */}
+          <div className="flex items-center justify-center gap-1 md:gap-2">
             <Button
               variant="icon"
               icon={Plus}
@@ -104,14 +108,20 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           </div>
         </div>
 
-        {/* Área de drop das tarefas */}
+        {/* Área de drop das tarefas com scroll otimizado para mobile */}
         <div
           ref={setNodeRef}
-          className={`flex-1 p-2 md:p-4 overflow-y-auto min-h-[180px] md:min-h-[200px] ${
-            isMobile && tasks.length >= 3 
-              ? 'grid grid-cols-2 gap-2' 
-              : 'space-y-2 md:space-y-3'
+          className={`flex-1 p-2 md:p-4 overflow-y-auto space-y-2 md:space-y-3 ${
+            isMobile 
+              ? 'max-h-[calc(100vh-280px)] min-h-[200px]' 
+              : 'min-h-[200px]'
           }`}
+          style={{
+            // Garantir scroll suave no mobile
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
+          }}
         >
           <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
             {tasks.map((task) => (
@@ -127,7 +137,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           {/* Placeholder quando não há tarefas */}
           {tasks.length === 0 && (
             <motion.div
-              className="flex flex-col items-center justify-center py-8 md:py-12 text-gray-400 col-span-2"
+              className="flex flex-col items-center justify-center py-8 md:py-12 text-gray-400"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -145,7 +155,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         </div>
 
         {/* Footer com botão de adicionar tarefa */}
-        <div className="p-2 md:p-4 border-t border-white/20">
+        <div className="p-2 md:p-4 border-t border-white/20 flex-shrink-0">
           <Button
             variant="ghost"
             icon={Plus}

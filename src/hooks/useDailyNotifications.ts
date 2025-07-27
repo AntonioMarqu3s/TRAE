@@ -39,7 +39,7 @@ export const useDailyNotifications = (isAuthenticated: boolean) => {
     }
   };
 
-  // Função para processar notificações diárias (memoizada)
+  // Função para processar notificações diárias
   const processDailyNotifications = useCallback(async () => {
     if (!isAuthenticated || !isSupported || permission !== 'granted') {
       return;

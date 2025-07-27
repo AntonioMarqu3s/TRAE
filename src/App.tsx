@@ -9,15 +9,20 @@ import { KanbanBoard } from './components/kanban';
 import { TaskModal } from './components/modals/TaskModal';
 import { ColumnModal } from './components/modals/ColumnModal';
 import { SettingsModal } from './components/modals/SettingsModal';
+import NotificationPopup from './components/ui/NotificationPopup';
 import LoginForm from './components/auth/LoginForm';
 import { useSupabaseKanbanStore } from './store/supabaseKanbanStore';
 import { useDailyNotifications } from './hooks/useDailyNotifications';
+import { useNotifications } from './hooks/useNotifications';
 
 // Componente principal que verifica autenticação
 const AppContent: React.FC = () => {
   const { user, loading: authLoading } = useAuth();
   const { loadBoard, isLoading, error, board } = useSupabaseKanbanStore();
   const loadBoardCalledRef = useRef<string | null>(null);
+
+  // Hook para notificações (sistema + popup)
+  const { popupNotifications, removePopupNotification } = useNotifications();
 
   // Hook para notificações diárias automáticas
   useDailyNotifications(!!user);
@@ -46,7 +51,7 @@ const AppContent: React.FC = () => {
   // Mostrar loading enquanto verifica autenticação
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="h-screen flex items-center justify-center bg-gray-50 overflow-hidden">
         <div className="flex items-center space-x-2">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
           <span className="text-gray-600">Verificando autenticação...</span>
@@ -63,7 +68,7 @@ const AppContent: React.FC = () => {
   // Mostrar erro se houver problema no carregamento
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="h-screen flex items-center justify-center bg-gray-50 overflow-hidden">
         <div className="text-center max-w-md mx-auto p-6">
           <div className="text-red-500 text-6xl mb-4">⚠️</div>
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Erro ao carregar dados</h2>
@@ -86,7 +91,7 @@ const AppContent: React.FC = () => {
   // Mostrar loading dos dados (apenas se não há board carregado)
   if (isLoading && !board) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="h-screen flex items-center justify-center bg-gray-50 overflow-hidden">
         <div className="flex items-center space-x-2">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
           <span className="text-gray-600">Carregando seus dados...</span>
@@ -97,7 +102,7 @@ const AppContent: React.FC = () => {
 
   // Renderizar aplicação principal
   return (
-    <div className="App">
+    <div className="App h-screen overflow-hidden flex flex-col">
       {/* Board principal */}
       <KanbanBoard />
       
@@ -105,6 +110,12 @@ const AppContent: React.FC = () => {
       <TaskModal />
       <ColumnModal />
       <SettingsModal />
+      
+      {/* Notificações Popup */}
+      <NotificationPopup 
+        notifications={popupNotifications}
+        onRemove={removePopupNotification}
+      />
     </div>
   );
 };

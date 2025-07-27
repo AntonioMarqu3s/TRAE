@@ -1,12 +1,47 @@
 import { useState, useEffect } from 'react';
+import { usePopupNotifications } from './usePopupNotifications';
 
 /**
- * Hook personalizado para gerenciar notificações locais no PWA
- * Fornece funcionalidades para solicitar permissão e enviar notificações
+ * Interface para tarefas locais (definida aqui para evitar dependência circular)
+ */
+interface TaskForNotification {
+  id: string;
+  title: string;
+  description: string | null;
+  column_id: string;
+  position: number;
+  priority: 'low' | 'medium' | 'high';
+  due_date: Date | null;
+  category_color: string;
+  tags: string[];
+  assignee: string | null;
+  created_at: Date;
+  updated_at: Date;
+  // Propriedades adicionais para notificações
+  status?: string;
+  boardTitle?: string;
+  columnTitle?: string;
+}
+
+/**
+ * Hook para gerenciar notificações do sistema e popup
+ * Combina notificações nativas do navegador com notificações popup internas
  */
 export const useNotifications = () => {
-  const [permission, setPermission] = useState<NotificationPermission>('default');
   const [isSupported, setIsSupported] = useState(false);
+  const [permission, setPermission] = useState<NotificationPermission>('default');
+  
+  // Hook para notificações popup
+  const {
+    notifications: popupNotifications,
+    addNotification: addPopupNotification,
+    removeNotification: removePopupNotification,
+    clearAllNotifications: clearAllPopupNotifications,
+    addSuccessNotification,
+    addWarningNotification,
+    addErrorNotification,
+    addInfoNotification
+  } = usePopupNotifications();
 
   useEffect(() => {
     // Verificar se as notificações são suportadas
@@ -36,47 +71,54 @@ export const useNotifications = () => {
   };
 
   /**
-   * Envia uma notificação local
+   * Envia uma notificação local (sistema + popup)
    */
   const sendNotification = (title: string, options?: NotificationOptions) => {
     console.log(`🔔 Tentando enviar notificação: "${title}"`);
     console.log(`📱 isSupported: ${isSupported}`);
     console.log(`🔐 permission: ${permission}`);
     
-    if (!isSupported) {
-      console.warn('❌ Notificações não são suportadas');
-      return null;
+    let systemNotification: Notification | null = null;
+    
+    // Tentar enviar notificação do sistema
+    if (isSupported && permission === 'granted') {
+      const defaultOptions: NotificationOptions = {
+        icon: '/kanban-logo.png',
+        badge: '/kanban-logo.png',
+        ...options
+      };
+
+      console.log(`📋 Opções da notificação:`, defaultOptions);
+
+      try {
+        console.log(`🚀 Criando notificação do sistema...`);
+        systemNotification = new Notification(title, defaultOptions);
+        console.log(`✅ Notificação do sistema criada com sucesso!`, systemNotification);
+        
+        // Auto-fechar após 5 segundos
+        setTimeout(() => {
+          console.log(`🔒 Fechando notificação do sistema: "${title}"`);
+          systemNotification?.close();
+        }, 5000);
+      } catch (error) {
+        console.error('❌ Erro ao enviar notificação do sistema:', error);
+      }
+    } else {
+      console.warn('❌ Notificação do sistema não disponível - usando apenas popup');
     }
 
-    if (permission !== 'granted') {
-      console.warn('❌ Permissão para notificações não foi concedida');
-      return null;
-    }
+    // Sempre enviar notificação popup como backup
+    const popupType = title.includes('Atrasadas') ? 'warning' : 'info';
+    const popupId = addPopupNotification(
+      title,
+      options?.body || '',
+      popupType,
+      6000 // 6 segundos para popup
+    );
+    
+    console.log(`🎯 Notificação popup criada com ID: ${popupId}`);
 
-    const defaultOptions: NotificationOptions = {
-      icon: '/logo192.png',
-      badge: '/logo192.png',
-      ...options
-    };
-
-    console.log(`📋 Opções da notificação:`, defaultOptions);
-
-    try {
-      console.log(`🚀 Criando notificação...`);
-      const notification = new Notification(title, defaultOptions);
-      console.log(`✅ Notificação criada com sucesso!`, notification);
-      
-      // Auto-fechar após 5 segundos
-      setTimeout(() => {
-        console.log(`🔒 Fechando notificação: "${title}"`);
-        notification.close();
-      }, 5000);
-
-      return notification;
-    } catch (error) {
-      console.error('❌ Erro ao enviar notificação:', error);
-      return null;
-    }
+    return systemNotification;
   };
 
   /**
@@ -196,7 +238,7 @@ export const useNotifications = () => {
   /**
    * Verifica e notifica sobre tarefas do dia e atrasadas
    */
-  const checkAndNotifyDailyTasks = (tasks: any[]) => {
+  const checkAndNotifyDailyTasks = (tasks: TaskForNotification[]) => {
     if (!isSupported || permission !== 'granted') return;
 
     console.log('🔍 Iniciando verificação de tarefas diárias...');
@@ -219,9 +261,9 @@ export const useNotifications = () => {
         return;
       }
 
-      // Verificar se tem data de vencimento (corrigido: due_date em vez de dueDate)
+      // Verificar se tem data de vencimento
       if (task.due_date) {
-        const dueDate = new Date(task.due_date);
+        const dueDate = new Date(task.due_date.getTime());
         dueDate.setHours(0, 0, 0, 0);
 
         console.log(`📅 Data de vencimento da tarefa "${task.title}": ${dueDate.toDateString()}`);
@@ -267,10 +309,15 @@ export const useNotifications = () => {
   };
 
   return {
-    permission,
+    // Estados das notificações do sistema
     isSupported,
+    permission,
+    
+    // Funções das notificações do sistema
     requestPermission,
     sendNotification,
+    
+    // Funções específicas de notificação
     notifyNewTask,
     notifyTaskMoved,
     notifyTaskDueSoon,
@@ -278,6 +325,16 @@ export const useNotifications = () => {
     notifyOverdueTask,
     notifyTodayTasks,
     notifyOverdueSummary,
-    checkAndNotifyDailyTasks
+    checkAndNotifyDailyTasks,
+    
+    // Estados e funções das notificações popup
+    popupNotifications,
+    addPopupNotification,
+    removePopupNotification,
+    clearAllPopupNotifications,
+    addSuccessNotification,
+    addWarningNotification,
+    addErrorNotification,
+    addInfoNotification
   };
 };
