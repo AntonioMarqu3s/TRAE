@@ -8,6 +8,7 @@ export { Card } from './Card';
 export { Modal } from './Modal';
 export { Input } from './Input';
 export { Textarea } from './Textarea';
+export { default as PasswordInput } from './PasswordInput';
 
 // Re-exportar tipos se necessário
 export type { default as ButtonProps } from './Button';
