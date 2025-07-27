@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Calendar, User, Tag, Palette, AlertTriangle } from 'lucide-react';
+import { Calendar, User, Tag, Palette, AlertTriangle, Trash2 } from 'lucide-react';
 import { useSupabaseKanbanStore } from '../../store/supabaseKanbanStore';
 import { LocalTask } from '../../store/supabaseKanbanStore';
 import { useNotifications } from '../../hooks/useNotifications';
@@ -28,6 +28,7 @@ export const TaskModal: React.FC = () => {
     closeModal,
     addTask,
     updateTask,
+    deleteTask,
     board,
   } = useSupabaseKanbanStore();
 
@@ -167,6 +168,19 @@ export const TaskModal: React.FC = () => {
   const formatDateForInput = (date: Date | undefined): string => {
     if (!date) return '';
     return date.toISOString().split('T')[0];
+  };
+
+  // Detecta se é mobile
+  const isMobile = window.innerWidth < 768;
+
+  // Handler para exclusão da tarefa (apenas mobile)
+  const handleDeleteTask = () => {
+    if (isEditing && modalState.data?.task) {
+      if (window.confirm('Tem certeza que deseja excluir esta tarefa?')) {
+        deleteTask(modalState.data.task.id);
+        closeModal();
+      }
+    }
   };
 
   return (
@@ -325,11 +339,25 @@ export const TaskModal: React.FC = () => {
 
         {/* Botões */}
         <div className="flex gap-2 md:gap-3 pt-3 md:pt-4">
+          {/* Botão de exclusão - apenas no mobile e quando editando */}
+          {isMobile && isEditing && (
+            <Button
+              type="button"
+              variant="ghost"
+              icon={Trash2}
+              onClick={handleDeleteTask}
+              className="text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-200 text-xs md:text-sm px-3"
+              aria-label="Excluir tarefa"
+            >
+              Excluir
+            </Button>
+          )}
+          
           <Button
             type="button"
             variant="ghost"
             onClick={closeModal}
-            className="flex-1 text-xs md:text-sm"
+            className={`${isMobile && isEditing ? 'flex-1' : 'flex-1'} text-xs md:text-sm`}
           >
             Cancelar
           </Button>

@@ -85,6 +85,14 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     }
   };
 
+  // Handler para clique na tarefa (apenas mobile)
+  const handleTaskClick = (e: React.MouseEvent) => {
+    if (isMobile && !isDragging) {
+      e.stopPropagation();
+      onEdit(task);
+    }
+  };
+
   return (
     <motion.div
       ref={setNodeRef}
@@ -100,39 +108,41 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       exit={{ opacity: 0, y: -20 }}
       whileHover={{ scale: isMobile ? 1 : 1.02 }}
       whileDrag={{ scale: 1.05, rotate: 2 }}
+      onClick={handleTaskClick}
     >
       <Card
         variant="task"
-        className="group relative"
+        className={`group relative ${isMobile ? 'cursor-pointer' : ''}`}
       >
-        {/* Botões de ação - sempre visíveis no mobile, hover no desktop */}
-        <div className={`absolute top-1.5 md:top-2 right-1.5 md:right-2 transition-opacity duration-200 flex gap-0.5 md:gap-1 z-10 ${
-          isDragging ? 'opacity-0 pointer-events-none' : 
-          isMobile ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-        }`}>
-          <Button
-            variant="icon"
-            size="sm"
-            icon={Edit3}
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(task);
-            }}
-            className={`${isMobile ? 'h-5 w-5' : 'h-6 w-6'} text-xs bg-white/80 hover:bg-white`}
-            aria-label="Editar tarefa"
-          />
-          <Button
-            variant="icon"
-            size="sm"
-            icon={Trash2}
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(task.id);
-            }}
-            className={`${isMobile ? 'h-5 w-5' : 'h-6 w-6'} text-xs bg-white/80 hover:bg-red-50 text-red-600`}
-            aria-label="Excluir tarefa"
-          />
-        </div>
+        {/* Botões de ação - apenas no desktop */}
+        {!isMobile && (
+          <div className={`absolute top-1.5 md:top-2 right-1.5 md:right-2 transition-opacity duration-200 flex gap-0.5 md:gap-1 z-10 ${
+            isDragging ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100'
+          }`}>
+            <Button
+              variant="icon"
+              size="sm"
+              icon={Edit3}
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(task);
+              }}
+              className="h-6 w-6 text-xs bg-white/80 hover:bg-white"
+              aria-label="Editar tarefa"
+            />
+            <Button
+              variant="icon"
+              size="sm"
+              icon={Trash2}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(task.id);
+              }}
+              className="h-6 w-6 text-xs bg-white/80 hover:bg-red-50 text-red-600"
+              aria-label="Excluir tarefa"
+            />
+          </div>
+        )}
 
         {/* Conteúdo da tarefa */}
         <div className="space-y-2 md:space-y-3">
