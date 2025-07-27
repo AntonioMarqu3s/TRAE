@@ -10,10 +10,12 @@ import { TaskModal } from './components/modals/TaskModal';
 import { ColumnModal } from './components/modals/ColumnModal';
 import { SettingsModal } from './components/modals/SettingsModal';
 import NotificationPopup from './components/ui/NotificationPopup';
+import { PWAInstallBanner } from './components/ui/PWAInstallBanner';
 import LoginForm from './components/auth/LoginForm';
 import { useSupabaseKanbanStore } from './store/supabaseKanbanStore';
 import { useDailyNotifications } from './hooks/useDailyNotifications';
 import { useNotifications } from './hooks/useNotifications';
+import { usePWA } from './hooks/usePWA';
 
 // Componente principal que verifica autenticação
 const AppContent: React.FC = () => {
@@ -23,6 +25,18 @@ const AppContent: React.FC = () => {
 
   // Hook para notificações (sistema + popup)
   const { popupNotifications, removePopupNotification } = useNotifications();
+
+  // Hook para PWA
+  const { 
+    showInstallPrompt: canShowInstallPrompt,
+    dismissInstallPrompt,
+    isMobile,
+    isInstalled,
+    canInstall
+  } = usePWA();
+  
+  // Função de instalação (renomeada para evitar conflito)
+  const installPWA = usePWA().showInstallPrompt;
 
   // Hook para notificações diárias automáticas
   useDailyNotifications(!!user);
@@ -115,6 +129,13 @@ const AppContent: React.FC = () => {
       <NotificationPopup 
         notifications={popupNotifications}
         onRemove={removePopupNotification}
+      />
+      
+      {/* Banner de instalação PWA */}
+      <PWAInstallBanner
+        isVisible={canInstall && isMobile}
+        onInstall={installPWA}
+        onDismiss={dismissInstallPrompt}
       />
     </div>
   );
