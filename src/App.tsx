@@ -11,12 +11,16 @@ import { ColumnModal } from './components/modals/ColumnModal';
 import { SettingsModal } from './components/modals/SettingsModal';
 import LoginForm from './components/auth/LoginForm';
 import { useSupabaseKanbanStore } from './store/supabaseKanbanStore';
+import { useDailyNotifications } from './hooks/useDailyNotifications';
 
 // Componente principal que verifica autenticação
 const AppContent: React.FC = () => {
   const { user, loading: authLoading } = useAuth();
   const { loadBoard, isLoading, error, board } = useSupabaseKanbanStore();
   const loadBoardCalledRef = useRef<string | null>(null);
+
+  // Hook para notificações diárias automáticas
+  useDailyNotifications(!!user);
 
   // Carregar dados do usuário quando autenticado (apenas uma vez por usuário)
   useEffect(() => {

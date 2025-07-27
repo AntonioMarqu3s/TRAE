@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, User, Tag, Palette, AlertTriangle } from 'lucide-react';
 import { useSupabaseKanbanStore } from '../../store/supabaseKanbanStore';
 import { LocalTask } from '../../store/supabaseKanbanStore';
+import { useNotifications } from '../../hooks/useNotifications';
 import { Modal, Button, Input, Textarea } from '../ui';
 
 // Cores pastel disponíveis para tarefas
@@ -27,7 +28,11 @@ export const TaskModal: React.FC = () => {
     closeModal,
     addTask,
     updateTask,
+    board,
   } = useSupabaseKanbanStore();
+
+  // Hook de notificações
+  const { permission, notifyNewTask } = useNotifications();
 
   // Estado local do formulário
   const [formData, setFormData] = useState({
@@ -145,6 +150,14 @@ export const TaskModal: React.FC = () => {
     } else {
       const columnId = modalState.data?.columnId || '';
       addTask(columnId, taskData);
+      
+      // Notificar criação de nova tarefa
+      if (permission === 'granted' && board) {
+        const column = board.columns.find(col => col.id === columnId);
+        if (column) {
+          notifyNewTask(taskData.title, column.title);
+        }
+      }
     }
 
     closeModal();

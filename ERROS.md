@@ -2,40 +2,39 @@
 
 ## 📊 Resumo Geral
 
-- 🔴 **Erros:** 0
-- ⚠️ **Avisos:** 11
+- 🔴 **Erros:** 7
+- ⚠️ **Avisos:** 2
 - ℹ️ **Informações:** 0
-- 💡 **Dicas:** 0
+- 💡 **Dicas:** 1
 - 📁 **Arquivos com problemas:** 2
 
-## 📁 index.css
+## 📁 useDailyNotifications.ts
 
-**Caminho:** `c:\Users\Anton\Desktop\TRAE\kanban-app\src\index.css`
+**Caminho:** `c:\Users\Anton\Desktop\TRAE\kanban-app\src\hooks\useDailyNotifications.ts`
 
-**Estatísticas:** 🔴 0 | ⚠️ 10 | ℹ️ 0 | 💡 0
+**Estatísticas:** 🔴 7 | ⚠️ 1 | ℹ️ 0 | 💡 0
 
-- [ ] ⚠️ Unknown at rule @tailwind - **Linha 2, Coluna 1** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @tailwind - **Linha 3, Coluna 1** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @tailwind - **Linha 4, Coluna 1** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @apply - **Linha 12, Coluna 5** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @apply - **Linha 16, Coluna 5** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @apply - **Linha 20, Coluna 5** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @apply - **Linha 72, Coluna 5** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @apply - **Linha 77, Coluna 5** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @apply - **Linha 82, Coluna 5** [css] (unknownAtRules)
-- [ ] ⚠️ Unknown at rule @apply - **Linha 87, Coluna 5** [css] (unknownAtRules)
+- [ ] ⚠️ React Hook useEffect has a missing dependency: 'processDailyNotifications'. Either include it or remove the dependency array. - **Linha 110, Coluna 6** [eslint] ([object Object])
+- [ ] ❌ Property 'boards' does not exist on type 'SupabaseKanbanStore'. - **Linha 11, Coluna 11** [ts] (2339)
+- [ ] ❌ Property 'tasks' does not exist on type 'SupabaseKanbanStore'. - **Linha 11, Coluna 19** [ts] (2339)
+- [ ] ❌ Property 'loadBoards' does not exist on type 'SupabaseKanbanStore'. - **Linha 11, Coluna 26** [ts] (2339)
+- [ ] ❌ Parameter 'board' implicitly has an 'any' type. - **Linha 62, Coluna 22** [ts] (7006)
+- [ ] ❌ Parameter 'column' implicitly has an 'any' type. - **Linha 63, Coluna 31** [ts] (7006)
+- [ ] ❌ Parameter 'task' implicitly has an 'any' type. - **Linha 64, Coluna 32** [ts] (7006)
+- [ ] ❌ Parameter 'task' implicitly has an 'any' type. - **Linha 76, Coluna 36** [ts] (7006)
 
-## 📁 supabaseKanbanStore.ts
+## 📁 App.tsx
 
-**Caminho:** `c:\Users\Anton\Desktop\TRAE\kanban-app\src\store\supabaseKanbanStore.ts`
+**Caminho:** `c:\Users\Anton\Desktop\TRAE\kanban-app\src\App.tsx`
 
-**Estatísticas:** 🔴 0 | ⚠️ 1 | ℹ️ 0 | 💡 0
+**Estatísticas:** 🔴 0 | ⚠️ 1 | ℹ️ 0 | 💡 1
 
-- [ ] ⚠️ Expected an error object to be thrown. - **Linha 151, Coluna 3** [eslint] ([object Object])
+- [ ] ⚠️ 'forceCheckDailyTasks' is assigned a value but never used. - **Linha 23, Coluna 11** [eslint] ([object Object])
+- [ ] 💡 'forceCheckDailyTasks' is declared but its value is never read. - **Linha 23, Coluna 9** [ts] (6133)
 
 ---
 
-**📅 Gerado em:** 26/07/2025, 20:04:14
+**📅 Gerado em:** 26/07/2025, 21:37:04
 
 **🔧 Extensão:** Trae Problems Viewer
 

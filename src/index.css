@@ -123,6 +123,23 @@ body.debug .debug-overlay {
   .kanban-board {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
+    /* Ocultar scrollbar mas manter funcionalidade */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE e Edge */
+  }
+  
+  .kanban-board::-webkit-scrollbar {
+    display: none; /* Chrome, Safari e Opera */
+  }
+  
+  /* Ocultar scrollbar horizontal em todos os containers de scroll */
+  .overflow-x-auto {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar {
+    display: none;
   }
 }
 

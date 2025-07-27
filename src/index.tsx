@@ -13,6 +13,19 @@ root.render(
   </React.StrictMode>
 );
 
+// Registro do Service Worker para PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('SW registrado com sucesso: ', registration);
+      })
+      .catch((registrationError) => {
+        console.log('Falha no registro do SW: ', registrationError);
+      });
+  });
+}
+
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

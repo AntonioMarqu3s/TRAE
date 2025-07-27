@@ -107,7 +107,11 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         {/* Área de drop das tarefas */}
         <div
           ref={setNodeRef}
-          className="flex-1 p-2 md:p-4 space-y-2 md:space-y-3 overflow-y-auto min-h-[180px] md:min-h-[200px]"
+          className={`flex-1 p-2 md:p-4 overflow-y-auto min-h-[180px] md:min-h-[200px] ${
+            isMobile && tasks.length >= 3 
+              ? 'grid grid-cols-2 gap-2' 
+              : 'space-y-2 md:space-y-3'
+          }`}
         >
           <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
             {tasks.map((task) => (
@@ -123,7 +127,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           {/* Placeholder quando não há tarefas */}
           {tasks.length === 0 && (
             <motion.div
-              className="flex flex-col items-center justify-center py-8 md:py-12 text-gray-400"
+              className="flex flex-col items-center justify-center py-8 md:py-12 text-gray-400 col-span-2"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}

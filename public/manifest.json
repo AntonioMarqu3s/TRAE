@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Kanban App",
+  "name": "Kanban Board - Gerenciador de Tarefas",
+  "description": "Aplicativo Kanban para gerenciamento de tarefas e projetos",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +21,24 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#6366f1",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "pt-BR",
+  "categories": ["productivity", "business"],
+  "shortcuts": [
+    {
+      "name": "Nova Tarefa",
+      "short_name": "Nova Tarefa",
+      "description": "Criar uma nova tarefa",
+      "url": "/?action=new-task",
+      "icons": [
+        {
+          "src": "logo192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
 }

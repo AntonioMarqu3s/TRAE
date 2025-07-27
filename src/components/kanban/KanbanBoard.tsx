@@ -3,7 +3,7 @@
  * Gerencia drag & drop entre colunas e coordena todas as operações
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   DndContext,
   DragEndEvent,
@@ -19,9 +19,11 @@ import {
 } from '@dnd-kit/core';
 import { arrayMove, SortableContext, horizontalListSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { motion } from 'framer-motion';
-import { Plus, Settings, Download, LogOut } from 'lucide-react';
+import { Plus, Settings, Download, LogOut, Bell, Calendar } from 'lucide-react';
 import { useSupabaseKanbanStore } from '../../store/supabaseKanbanStore';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNotifications } from '../../hooks/useNotifications';
+import { useDailyNotifications } from '../../hooks/useDailyNotifications';
 import { LocalTask, LocalColumn } from '../../store/supabaseKanbanStore';
 import { Button } from '../ui';
 import { KanbanColumn } from './KanbanColumn';
@@ -39,6 +41,18 @@ export const KanbanBoard: React.FC = () => {
   // Contexto de autenticação
   const { signOut } = useAuth();
   
+  // Hook de notificações PWA
+  const {
+    permission,
+    isSupported,
+    requestPermission,
+    notifyTaskMoved,
+    notifyTaskCompleted
+  } = useNotifications();
+  
+  // Hook de notificações diárias
+  const { forceCheckDailyTasks } = useDailyNotifications(true);
+  
   // Estado global do Kanban com Supabase
   const {
     board,
@@ -53,6 +67,18 @@ export const KanbanBoard: React.FC = () => {
 
   // Detectar se é dispositivo móvel
   const isMobile = window.innerWidth <= 768;
+
+  // Solicitar permissão para notificações ao carregar
+  useEffect(() => {
+    if (isSupported && permission === 'default') {
+      // Aguardar um pouco antes de solicitar permissão
+      const timer = setTimeout(() => {
+        requestPermission();
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isSupported, permission, requestPermission]);
 
   // Sensores para drag & drop otimizados para mobile
   const sensors = useSensors(
@@ -156,6 +182,20 @@ export const KanbanBoard: React.FC = () => {
       }
       
       moveTask(activeId, activeColumn.id, overColumn.id, newIndex);
+      
+      // Notificar movimento de tarefa
+      if (permission === 'granted') {
+        notifyTaskMoved(activeTask.title, activeColumn.title, overColumn.title);
+      }
+      
+      // Verificar se a tarefa foi movida para uma coluna de "concluído"
+      if (overColumn.title.toLowerCase().includes('concluí') || 
+          overColumn.title.toLowerCase().includes('feito') ||
+          overColumn.title.toLowerCase().includes('done')) {
+        if (permission === 'granted') {
+          notifyTaskCompleted(activeTask.title);
+        }
+      }
     } else {
       // Reordenação de tarefas na mesma coluna
       const activeIndex = activeColumn.taskIds.findIndex(taskId => taskId === activeId);
@@ -284,6 +324,32 @@ export const KanbanBoard: React.FC = () => {
 
           {/* Desktop buttons */}
           <div className="hidden md:flex items-center gap-2">
+            {/* Botão de notificações */}
+            {isSupported && permission !== 'granted' && (
+              <Button
+                variant="ghost"
+                icon={Bell}
+                onClick={requestPermission}
+                aria-label="Ativar notificações"
+                className="text-orange-600 hover:text-orange-700"
+              >
+                Notificações
+              </Button>
+            )}
+            
+            {/* Botão de teste das notificações diárias */}
+            {isSupported && permission === 'granted' && (
+              <Button
+                variant="ghost"
+                icon={Calendar}
+                onClick={forceCheckDailyTasks}
+                aria-label="Verificar tarefas do dia"
+                className="text-blue-600 hover:text-blue-700"
+              >
+                Verificar Tarefas
+              </Button>
+            )}
+            
             <Button
               variant="ghost"
               icon={Download}
@@ -322,6 +388,28 @@ export const KanbanBoard: React.FC = () => {
 
           {/* Mobile buttons - apenas ícones */}
           <div className="flex md:hidden items-center gap-1">
+            {/* Botão de notificações mobile */}
+            {isSupported && permission !== 'granted' && (
+              <Button
+                variant="ghost"
+                icon={Bell}
+                onClick={requestPermission}
+                aria-label="Ativar notificações"
+                className="p-2 text-orange-600 hover:text-orange-700"
+              />
+            )}
+            
+            {/* Botão de teste das notificações diárias mobile */}
+            {isSupported && permission === 'granted' && (
+              <Button
+                variant="ghost"
+                icon={Calendar}
+                onClick={forceCheckDailyTasks}
+                aria-label="Verificar tarefas do dia"
+                className="p-2 text-blue-600 hover:text-blue-700"
+              />
+            )}
+            
             <Button
               variant="ghost"
               icon={Plus}
