@@ -87,15 +87,43 @@ body.debug .debug-overlay {
   -moz-user-select: none !important;
   -ms-user-select: none !important;
   user-select: none !important;
+  opacity: 0.5;
+  transform: rotate(5deg);
+  z-index: 1000;
 }
 
 /* Melhorar cursor durante drag */
 .draggable {
   cursor: grab;
+  touch-action: none; /* Melhora o touch no mobile */
 }
 
 .draggable:active {
   cursor: grabbing;
+}
+
+/* Mobile touch improvements */
+@media (max-width: 768px) {
+  .draggable {
+    cursor: default; /* Remove cursor no mobile */
+    -webkit-touch-callout: none; /* Desabilita callout no iOS */
+    -webkit-user-select: none; /* Desabilita seleção de texto */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Melhora a área de toque para botões pequenos */
+  .task-card button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Scroll suave no mobile */
+  .kanban-board {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
 }
 
 /* Bloquear seleção de texto durante drag */

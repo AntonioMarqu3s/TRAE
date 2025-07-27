@@ -51,21 +51,27 @@ export const KanbanBoard: React.FC = () => {
     openModal,
   } = useSupabaseKanbanStore();
 
-  // Sensores para drag & drop
+  // Detectar se é dispositivo móvel
+  const isMobile = window.innerWidth <= 768;
+
+  // Sensores para drag & drop otimizados para mobile
   const sensors = useSensors(
+    // Sensor de ponteiro para desktop
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // Reduzido para 8px para ativar mais facilmente
-        tolerance: 5, // Tolerância para movimento
-        delay: 100, // Pequeno delay para evitar conflitos
+        distance: isMobile ? 5 : 8, // Menor distância no mobile
+        tolerance: isMobile ? 8 : 5, // Maior tolerância no mobile
+        delay: isMobile ? 0 : 100, // Sem delay no mobile
       },
     }),
+    // Sensor de toque otimizado para mobile
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 250,
-        tolerance: 5,
+        delay: isMobile ? 150 : 250, // Delay menor no mobile
+        tolerance: isMobile ? 10 : 5, // Maior tolerância no mobile
       },
     }),
+    // Sensor de teclado para acessibilidade
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -267,16 +273,17 @@ export const KanbanBoard: React.FC = () => {
       {/* Header */}
       <header className="glass-effect border-b border-white/20 p-4">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl md:text-2xl font-bold text-gray-800 truncate">
               {board?.title || 'Kanban Board'}
             </h1>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 text-xs md:text-sm">
               {board?.columns.length || 0} colunas • {board ? Object.keys(board.tasks).length : 0} tarefas
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Desktop buttons */}
+          <div className="hidden md:flex items-center gap-2">
             <Button
               variant="ghost"
               icon={Download}
@@ -312,11 +319,38 @@ export const KanbanBoard: React.FC = () => {
               Nova Coluna
             </Button>
           </div>
+
+          {/* Mobile buttons - apenas ícones */}
+          <div className="flex md:hidden items-center gap-1">
+            <Button
+              variant="ghost"
+              icon={Plus}
+              onClick={handleAddColumn}
+              aria-label="Nova Coluna"
+              className="p-2"
+            />
+            
+            <Button
+              variant="ghost"
+              icon={Settings}
+              onClick={() => openModal('settings', 'edit')}
+              aria-label="Configurações"
+              className="p-2"
+            />
+            
+            <Button
+              variant="ghost"
+              icon={LogOut}
+              onClick={handleSignOut}
+              aria-label="Sair"
+              className="p-2"
+            />
+          </div>
         </div>
       </header>
 
       {/* Board */}
-      <main className="flex-1 p-6 overflow-hidden">
+      <main className="flex-1 p-2 md:p-6 overflow-hidden">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
@@ -324,8 +358,9 @@ export const KanbanBoard: React.FC = () => {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          <div className="h-full overflow-x-auto overflow-y-hidden">
-            <div className="flex gap-6 h-full min-w-max pb-6">
+          <div className="h-full overflow-x-auto overflow-y-hidden kanban-board">
+            {/* Container com padding otimizado para mobile */}
+            <div className="flex gap-3 md:gap-6 h-full min-w-max pb-4 md:pb-6 px-1 md:px-0">
               <SortableContext items={columnIds} strategy={horizontalListSortingStrategy}>
                 {board?.columns.map((column) => (
                   <KanbanColumn
@@ -344,25 +379,26 @@ export const KanbanBoard: React.FC = () => {
               {/* Placeholder para adicionar primeira coluna */}
               {board?.columns.length === 0 && (
                 <motion.div
-                  className="flex items-center justify-center w-80 h-96"
+                  className="flex items-center justify-center w-72 md:w-80 h-80 md:h-96"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <div className="text-center">
-                    <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-4 mx-auto">
-                      <Plus size={32} className="text-white" />
+                  <div className="text-center px-4">
+                    <div className="w-16 md:w-20 h-16 md:h-20 rounded-full bg-white/20 flex items-center justify-center mb-4 mx-auto">
+                      <Plus size={isMobile ? 24 : 32} className="text-white" />
                     </div>
-                    <h3 className="text-xl font-semibold text-white mb-2">
+                    <h3 className="text-lg md:text-xl font-semibold text-white mb-2">
                       Comece criando uma coluna
                     </h3>
-                    <p className="text-white/80 mb-4">
+                    <p className="text-white/80 mb-4 text-sm md:text-base">
                       Organize suas tarefas em colunas personalizadas
                     </p>
                     <Button
                       variant="primary"
                       icon={Plus}
                       onClick={handleAddColumn}
+                      className="text-sm md:text-base"
                     >
                       Criar primeira coluna
                     </Button>
