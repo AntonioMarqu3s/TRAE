@@ -3,10 +3,10 @@
  * Aparece apenas em dispositivos móveis quando o app pode ser instalado
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, X, Smartphone } from 'lucide-react';
-import { Button } from './Button';
+// Remove unused import
 
 interface PWAInstallBannerProps {
   isVisible: boolean;
@@ -19,6 +19,36 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
   onInstall,
   onDismiss,
 }) => {
+  // Handlers com logs de debug para identificar problemas
+  const handleInstall = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('🔄 PWA Install button clicked');
+    
+    try {
+      onInstall();
+      console.log('✅ PWA Install function called successfully');
+    } catch (error) {
+      console.error('❌ Error calling PWA install function:', error);
+    }
+  }, [onInstall]);
+
+  const handleDismiss = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('❌ PWA Dismiss button clicked');
+    
+    try {
+      onDismiss();
+      console.log('✅ PWA Dismiss function called successfully');
+    } catch (error) {
+      console.error('❌ Error calling PWA dismiss function:', error);
+    }
+  }, [onDismiss]);
+
+  // Log quando o componente é renderizado
+  console.log('🎨 PWAInstallBanner rendered:', { isVisible });
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -27,9 +57,10 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="fixed bottom-4 left-4 right-4 z-50 md:hidden"
+          className="pwa-banner fixed bottom-4 left-4 right-4 z-[9999] md:hidden pointer-events-auto"
+          style={{ zIndex: 9999 }}
         >
-          <div className="bg-white rounded-xl shadow-2xl border border-gray-200 p-4">
+          <div className="bg-white rounded-xl shadow-2xl border border-gray-200 p-4 pointer-events-auto">
             <div className="flex items-start gap-3">
               {/* Ícone */}
               <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -45,32 +76,34 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
                   Adicione à tela inicial para acesso rápido e experiência completa
                 </p>
                 
-                {/* Botões */}
-                <div className="flex gap-2">
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    icon={Download}
-                    onClick={onInstall}
-                    className="text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white"
+                {/* Botões com handlers diretos */}
+                <div className="flex gap-2 pointer-events-auto">
+                  {/* Botão Instalar */}
+                  <button
+                    onClick={handleInstall}
+                    className="inline-flex items-center justify-center gap-1 text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-200 pointer-events-auto relative z-10"
+                    style={{ zIndex: 10 }}
                   >
+                    <Download size={14} />
                     Instalar
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={onDismiss}
-                    className="text-xs px-3 py-1.5 text-gray-700 hover:text-gray-900 border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50"
+                  </button>
+                  
+                  {/* Botão Recusar */}
+                  <button
+                    onClick={handleDismiss}
+                    className="inline-flex items-center justify-center text-xs px-3 py-1.5 text-gray-700 hover:text-gray-900 border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 rounded-lg font-medium transition-colors duration-200 pointer-events-auto relative z-10"
+                    style={{ zIndex: 10 }}
                   >
                     Não, obrigado
-                  </Button>
+                  </button>
                 </div>
               </div>
               
               {/* Botão fechar */}
               <button
-                onClick={onDismiss}
-                className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                onClick={handleDismiss}
+                className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors pointer-events-auto relative z-10"
+                style={{ zIndex: 10 }}
                 aria-label="Fechar notificação"
               >
                 <X size={18} />

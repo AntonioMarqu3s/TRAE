@@ -94,16 +94,20 @@ export const usePWA = () => {
 
   // Função para mostrar o prompt de instalação
   const showInstallPrompt = async () => {
+    console.log('🔄 showInstallPrompt called');
+    console.log('📱 deferredPrompt available:', !!deferredPrompt);
+    
     if (!deferredPrompt) {
-      console.log('Prompt de instalação não disponível');
+      console.log('❌ Prompt de instalação não disponível');
       return false;
     }
 
     try {
+      console.log('🚀 Showing install prompt...');
       await deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       
-      console.log(`Usuário ${outcome} a instalação`);
+      console.log(`✅ Usuário ${outcome} a instalação`);
       
       if (outcome === 'accepted') {
         setPwaState(prev => ({
@@ -115,13 +119,15 @@ export const usePWA = () => {
       setDeferredPrompt(null);
       return outcome === 'accepted';
     } catch (error) {
-      console.error('Erro ao mostrar prompt de instalação:', error);
+      console.error('❌ Erro ao mostrar prompt de instalação:', error);
       return false;
     }
   };
 
   // Função para dispensar o prompt
   const dismissInstallPrompt = () => {
+    console.log('❌ dismissInstallPrompt called');
+    
     setPwaState(prev => ({
       ...prev,
       showInstallPrompt: false,
@@ -129,6 +135,7 @@ export const usePWA = () => {
     
     // Salvar no localStorage para não mostrar novamente por um tempo
     localStorage.setItem('pwa-install-dismissed', Date.now().toString());
+    console.log('💾 PWA install dismissed and saved to localStorage');
   };
 
   // Verificar se o prompt foi dispensado recentemente (últimas 24 horas)

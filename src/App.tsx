@@ -29,13 +29,13 @@ const AppContent: React.FC = () => {
 
   // Hook para PWA
   const { 
+    showInstallPrompt,
     dismissInstallPrompt,
     isMobile,
     canInstall
   } = usePWA();
   
-  // Função de instalação (renomeada para evitar conflito)
-  const installPWA = usePWA().showInstallPrompt;
+  console.log('🎯 PWA State in App:', { canInstall, isMobile, showInstallPrompt: typeof showInstallPrompt, dismissInstallPrompt: typeof dismissInstallPrompt });
 
   // Hook para notificações diárias automáticas
   useDailyNotifications(!!user);
@@ -134,7 +134,7 @@ const AppContent: React.FC = () => {
       {/* Banner de instalação PWA */}
       <PWAInstallBanner
         isVisible={canInstall && isMobile}
-        onInstall={installPWA}
+        onInstall={showInstallPrompt}
         onDismiss={dismissInstallPrompt}
       />
     </div>

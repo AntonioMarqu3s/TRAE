@@ -55,6 +55,18 @@ button:disabled {
   z-index: 100 !important;
 }
 
+/* Garantir que o banner PWA e seus botões funcionem */
+.pwa-banner,
+.pwa-banner * {
+  pointer-events: auto !important;
+}
+
+.pwa-banner button {
+  pointer-events: auto !important;
+  z-index: 10000 !important;
+  position: relative !important;
+}
+
 /* Garantir que elementos interativos tenham z-index adequado */
 .interactive-element {
   position: relative;
