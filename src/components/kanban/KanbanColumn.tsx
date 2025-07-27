@@ -54,7 +54,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         variant="column"
         className={`h-full flex flex-col transition-all duration-200 ${
           isOver ? 'ring-2 ring-primary-start/50 bg-primary-start/5' : ''
-        } ${isMobile ? 'max-h-[calc(100vh-120px)]' : ''}`}
+        } ${isMobile ? 'kanban-column-mobile' : ''}`}
       >
         {/* Header da coluna */}
         <div className="p-3 md:p-4 border-b border-white/20 flex-shrink-0">
@@ -113,7 +113,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           ref={setNodeRef}
           className={`flex-1 p-2 md:p-4 overflow-y-auto space-y-2 md:space-y-3 ${
             isMobile 
-              ? 'max-h-[calc(100vh-280px)] min-h-[200px]' 
+              ? 'kanban-tasks-area' 
               : 'min-h-[200px]'
           }`}
           style={{

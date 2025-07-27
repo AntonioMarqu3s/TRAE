@@ -141,6 +141,22 @@ body.debug .debug-overlay {
   .overflow-x-auto::-webkit-scrollbar {
     display: none;
   }
+  
+  /* Melhorar altura das colunas em smartphones maiores */
+  .kanban-column-mobile {
+    height: calc(100vh - 140px);
+    min-height: calc(100vh - 140px);
+    max-height: calc(100vh - 140px);
+  }
+  
+  /* Área de scroll das tarefas otimizada */
+  .kanban-tasks-area {
+    height: calc(100vh - 320px);
+    min-height: calc(100vh - 320px);
+    max-height: calc(100vh - 320px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* Bloquear seleção de texto durante drag */

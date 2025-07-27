@@ -57,12 +57,12 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
                     Instalar
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant="secondary"
                     size="sm"
                     onClick={onDismiss}
-                    className="text-xs px-3 py-1.5 text-gray-600 hover:text-gray-800"
+                    className="text-xs px-3 py-1.5 text-gray-700 hover:text-gray-900 border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50"
                   >
-                    Agora não
+                    Não, obrigado
                   </Button>
                 </div>
               </div>
@@ -70,10 +70,10 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
               {/* Botão fechar */}
               <button
                 onClick={onDismiss}
-                className="flex-shrink-0 p-1 text-gray-400 hover:text-gray-600 transition-colors"
-                aria-label="Fechar"
+                className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Fechar notificação"
               >
-                <X size={16} />
+                <X size={18} />
               </button>
             </div>
           </div>
