@@ -78,7 +78,7 @@ export interface LocalTask {
 
 export interface ModalState {
   isOpen: boolean;
-  type: 'task' | 'column' | 'settings' | null;
+  type: 'task' | 'column' | 'settings' | 'confirm' | null;
   mode?: 'create' | 'edit';
   data?: any;
 }
@@ -108,6 +108,11 @@ interface SupabaseKanbanStore {
   
   // Ações para modal
   openModal: (type: ModalState['type'], mode?: ModalState['mode'], data?: any) => void;
+  openConfirmModal: (title: string, message: string, onConfirm: () => void, options?: {
+    confirmText?: string;
+    cancelText?: string;
+    variant?: 'danger' | 'warning' | 'info' | 'success';
+  }) => void;
   closeModal: () => void;
   
   // Ações gerais
@@ -748,6 +753,23 @@ export const useSupabaseKanbanStore = create<SupabaseKanbanStore>((set, get) => 
         type,
         mode,
         data,
+      }
+    });
+  },
+
+  openConfirmModal: (title, message, onConfirm, options = {}) => {
+    set({
+      modalState: {
+        isOpen: true,
+        type: 'confirm',
+        data: {
+          title,
+          message,
+          onConfirm,
+          confirmText: options.confirmText || 'Confirmar',
+          cancelText: options.cancelText || 'Cancelar',
+          variant: options.variant || 'danger',
+        },
       }
     });
   },

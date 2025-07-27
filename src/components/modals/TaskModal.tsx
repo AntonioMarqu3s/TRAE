@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, User, Tag, Palette, AlertTriangle, Trash2 } from 'lucide-react';
 import { useSupabaseKanbanStore } from '../../store/supabaseKanbanStore';
-import { LocalTask } from '../../store/supabaseKanbanStore';
+import { LocalTask, LocalColumn } from '../../store/supabaseKanbanStore';
 import { useNotifications } from '../../hooks/useNotifications';
 import { Modal, Button, Input, Textarea } from '../ui';
 
@@ -29,6 +29,7 @@ export const TaskModal: React.FC = () => {
     addTask,
     updateTask,
     deleteTask,
+    openConfirmModal,
     board,
   } = useSupabaseKanbanStore();
 
@@ -154,7 +155,7 @@ export const TaskModal: React.FC = () => {
       
       // Notificar criação de nova tarefa
       if (permission === 'granted' && board) {
-        const column = board.columns.find(col => col.id === columnId);
+        const column = board.columns.find((col: LocalColumn) => col.id === columnId);
         if (column) {
           notifyNewTask(taskData.title, column.title);
         }
@@ -176,10 +177,19 @@ export const TaskModal: React.FC = () => {
   // Handler para exclusão da tarefa (apenas mobile)
   const handleDeleteTask = () => {
     if (isEditing && modalState.data?.task) {
-      if (window.confirm('Tem certeza que deseja excluir esta tarefa?')) {
-        deleteTask(modalState.data.task.id);
-        closeModal();
-      }
+      openConfirmModal(
+        'Excluir Tarefa',
+        'Tem certeza que deseja excluir esta tarefa? Esta ação não pode ser desfeita.',
+        () => {
+          deleteTask(modalState.data.task.id);
+          closeModal();
+        },
+        {
+          confirmText: 'Excluir',
+          cancelText: 'Cancelar',
+          variant: 'danger'
+        }
+      );
     }
   };
 

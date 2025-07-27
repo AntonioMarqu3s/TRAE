@@ -9,6 +9,7 @@ import { KanbanBoard } from './components/kanban';
 import { TaskModal } from './components/modals/TaskModal';
 import { ColumnModal } from './components/modals/ColumnModal';
 import { SettingsModal } from './components/modals/SettingsModal';
+import { ConfirmModalWrapper } from './components/modals/ConfirmModalWrapper';
 import NotificationPopup from './components/ui/NotificationPopup';
 import { PWAInstallBanner } from './components/ui/PWAInstallBanner';
 import LoginForm from './components/auth/LoginForm';
@@ -28,10 +29,8 @@ const AppContent: React.FC = () => {
 
   // Hook para PWA
   const { 
-    showInstallPrompt: canShowInstallPrompt,
     dismissInstallPrompt,
     isMobile,
-    isInstalled,
     canInstall
   } = usePWA();
   
@@ -124,6 +123,7 @@ const AppContent: React.FC = () => {
       <TaskModal />
       <ColumnModal />
       <SettingsModal />
+      <ConfirmModalWrapper />
       
       {/* Notificações Popup */}
       <NotificationPopup 

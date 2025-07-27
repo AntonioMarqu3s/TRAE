@@ -63,6 +63,7 @@ export const KanbanBoard: React.FC = () => {
     deleteColumn,
     reorderColumns,
     openModal,
+    openConfirmModal,
   } = useSupabaseKanbanStore();
 
   // Detectar se é dispositivo móvel
@@ -221,9 +222,18 @@ export const KanbanBoard: React.FC = () => {
   };
 
   const handleDeleteTask = async (taskId: string) => {
-    if (window.confirm('Tem certeza que deseja excluir esta tarefa?')) {
-      await deleteTask(taskId);
-    }
+    openConfirmModal(
+      'Excluir Tarefa',
+      'Tem certeza que deseja excluir esta tarefa? Esta ação não pode ser desfeita.',
+      async () => {
+        await deleteTask(taskId);
+      },
+      {
+        confirmText: 'Excluir',
+        cancelText: 'Cancelar',
+        variant: 'danger'
+      }
+    );
   };
 
   const handleAddColumn = () => {
@@ -241,12 +251,21 @@ export const KanbanBoard: React.FC = () => {
     const taskCount = column?.taskIds.length || 0;
     
     const message = taskCount > 0 
-      ? `Esta coluna contém ${taskCount} tarefa(s). Tem certeza que deseja excluí-la?`
-      : 'Tem certeza que deseja excluir esta coluna?';
+      ? `Esta coluna contém ${taskCount} tarefa(s). Tem certeza que deseja excluí-la? Todas as tarefas serão perdidas.`
+      : 'Tem certeza que deseja excluir esta coluna? Esta ação não pode ser desfeita.';
     
-    if (window.confirm(message)) {
-      await deleteColumn(columnId);
-    }
+    openConfirmModal(
+      'Excluir Coluna',
+      message,
+      async () => {
+        await deleteColumn(columnId);
+      },
+      {
+        confirmText: 'Excluir',
+        cancelText: 'Cancelar',
+        variant: 'danger'
+      }
+    );
   };
 
   // Exportar dados do board
